@@ -1,0 +1,169 @@
+INTRODUCTION
+============
+
+The program gas.cc is a small C-program that will perform the simulation
+of a gas of hard disks in two dimensions. There is also the possibility of
+visualizing the trajectory on the fly. This is cool, but not necessary to
+do the exercise. Also, it demands that you have installed the SDL graphics
+ibrary.
+
+The working principle of gas.cc is explained in the lecture slides of Prof
+Hunenberger. More details are provided in this README file and in the comments
+ithin the program source file.
+
+The program gas.cc is already written and functional, but for the moment,
+it reports zero's for the values of th temperature and pressure along the
+imulation.
+
+Your task will be to:
+
+(0) Compile and run the program
+(1) Read and understand the program
+(2) Implement the functions "calculate_temperature" and "calculate_pressure"
+(3) Verify numerically that the ideal-gas equation of state (approximately) holds
+
+To keep things as simple as possible:
+
+- All the material related to visualization is gathered in
+  a file "visual.h", which you can entirely ignore; this
+  also requires the file "sphere.png", with the atom drawing
+  (if you like you can replace it by any other drawing
+  you like, with fun results ;-)
+
+- Although it is usually a bad practice for large projects,
+  the program relies a lot on global variables (so as to
+  keep the function calls simple) and the input parameters
+  are hard-coded (so as to avoid the need for a file input)
+
+TASK 0: Compile and run the program
+===================================
+
+The program can be compiled to an executable named gas using
+> g++ -o gas gas.cc
+
+If you want to visualize the trajectory on the fly, use
+> g++ -o gas -DVISUAL gas.cc -lSDL2_image -lSDL2
+
+This requires that you have SDL installed, see https://www.libsdl.org
+
+On my Ubuntu machine, I installed it using:
+> sudo apt-get install libsdl2-2.0-0 libsdl2-dev libsdl2-image-2.0-0 libsdl2-image-dev
+
+If the code is not compiled with the macro "VISUAL", the visualization
+funcions are replaced by dummy functions that are called by the code,
+but do nothing.
+
+
+TASK 1: Read and understand the program
+=======================================
+
+Just go through the program step by step, and try to figure out how it works.
+To help you in this task, refer to the lecture slides of Prof Hunenberger and
+the comments ithin the program source file.
+
+TASK 3: Implement the functions "calculate_temperature" and "calculate_pressure"
+================================================================================
+
+The function "calculate_temperature" is supposed to use
+the atomic velocities (argument: array vel[]) and return
+the current temperature of the system. For this, it will also
+need  the values of some of the global variables. Please,
+refer to the lecture notes to find the relevant equations.
+
+Your implementation should be easy to debug, by noting that:
+(1) the temperature is constant along the simulation
+(2) the corresponding value must match that of the input "ini_temp" value
+
+The function "calculate_pressure" is supposed to use the "kick"
+value returned by the function "process_wall_collisions"
+(argument: kick) and return the current pressure of the system.
+For this, it will also need  the values of some of the global
+variables. At a given time-step, the quantity "kick" represents
+the sum of the normal outside-directed velocity over all
+particles hitting a box wall. So, for instance, if a particle
+hits the x=0 wall with a velocity vector (vx,vy)=(-2,3), a
++2 is added to the "kick". Please, refer to the lecture notes
+to find the relevant equations.
+
+It is important to note that this instantaneous pressure will
+fluctuate a lot. For this reason, the variable "pres_cumul" provides
+a running average of the pressure, and only the converged value of
+this average after a sufficient number of steps (that you should
+determine yourself!) should be considered meaningful.
+
+To help you debug your implementation, note that the pressure
+should be about P = XXX kJ/(mol K) for the following settings:
+num_atoms = 200, box_edge  = 50 nm, ini_temp = 300 K,
+mas_atom  = 40.0 g/mol, and rad_atom  = 0.2 nm.
+
+
+TASK 3: Verify numerically that the ideal-gas equation of state (approximately) holds
+=====================================================================================
+
+The ideal-gas equation in two dimensions reads: P A = N R T
+Here, P is the pressure in kJ/(mol nm^2), A the box area in
+nm (two-dimensional analog of the three-dimensional volume),
+N the number of atoms, R the gas constant in kJ/(mol K),
+and T the absolute temperature in K.
+
+To verify that this equation (approximately) holds, use the
+program gas.cc to fill the table below (but first read till the end!):
+
+N     A        T        -> P            : R            : PA/(NRT)
+[-]   [nm^2]   [K]      -> [kJ/(K mol)] : [kJ/(K mol)] : [-]
+
+300   2500.0   300.0    -> ???          : 0.008314     : ???
+500   2500.0   300.0    -> ???          : 0.008314     : ???
+700   2500.0   300.0    -> ???          : 0.008314     : ???
+
+500   2000.0   300.0    -> ???          : 0.008314     : ???
+500   2500.0   300.0    -> ???          : 0.008314     : ???
+500   3000.0   300.0    -> ???          : 0.008314     : ???
+
+500   2500.0   200.0    -> ???          : 0.008314     : ???
+500   2500.0   300.0    -> ???          : 0.008314     : ???
+500   2500.0   400.0    -> ???          : 0.008314     : ???
+
+For these calculations, we recommend the settings:
+mas_atom  = 40.0 g/mol, rad_atom  = 0.001 nm,
+num_steps = 25000, and time_step = 0.1
+
+To simplify your life, you can use the script "make_table.csh".
+For this, do "cp gas.cc gas_mac.cc". Then edit gas_mac.cc to implement
+the above settings, and also replace the assignments of
+"num_atoms", "box_edge", and "ini_temp" by
+> const int    num_atoms = NUMATOMS;
+> const double box_edge  = sqrt(AREA);
+> const double ini_temp  = TEMPERATURE;
+This will allow "make_table.csh" to control the input
+parameters using macros.
+
+Finally, for further exploration, try to re-generate the table using:
+- mas_atom = 20.0 g/mol
+- rad_atom = 2.0 nm
+Note your observations.
+
+When you are done with the table, please, answer the following questions:
+
+(1) The temperature is constant along the simulation. Explain why.
+
+(2) The instantaneous pressure fluctuates a lot (reason for which we
+    have to average it over a sufficient number of steps). This is
+    so because it depends on the number of collisions occurring
+    in a given time-step, which is highly variable. Explain why,
+    when all other parameters are kept constant, the fluctuations
+    will increase with:
+    - a decreasing number of particles
+    - a decreasing temperature
+    - an increasing box area
+    - an increasing atomic mass
+    - a decreasing timestep size
+    
+
+(3) The two-dimensional hard-disk gas does not exactly obey the
+    ideal-gas law
+    - in which limit does this law become valid and why?
+    - does this depend on the atom mass?
+    - can you think of a simple correction to apply to the
+      equation for approximately taking this effect into account?
+
