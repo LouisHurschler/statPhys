@@ -7,15 +7,15 @@
 //
 // SIMULATION PARAMETERS
 //
-const int    num_atoms = 200;    // number of atoms
-const double box_edge  = 50.0;   // edge of the square box [nm]
-const double ini_temp  = 300.0;  // initial temperature [K]
+const int    num_atoms = NUMATOMS;    // number of atoms
+const double box_edge  = sqrt(AREA);   // edge of the square box [nm]
+const double ini_temp  = TEMPERATURE;  // initial temperature [K]
 //
-const int    num_steps = 5000;   // number of time steps
-const double time_step = 0.5;    // time-step size [ps]
+const int    num_steps = 25000;   // number of time steps
+const double time_step = 0.1;    // time-step size [ps]
 //
 const double mas_atom  = 40.0;   // mass of the atom [g/mol] -> about 40 for Argon
-const double rad_atom  = 0.2;    // radius of the atom [nm]  -> about 0.2 for Argon 
+const double rad_atom  = 0.001;    // radius of the atom [nm]  -> about 0.2 for Argon 
 //
 const int    rand_ini  = 230570; // random-number generator seed
 //

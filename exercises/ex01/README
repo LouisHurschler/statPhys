@@ -9,11 +9,11 @@ ibrary.
 
 The working principle of gas.cc is explained in the lecture slides of Prof
 Hunenberger. More details are provided in this README file and in the comments
-ithin the program source file.
+within the program source file.
 
 The program gas.cc is already written and functional, but for the moment,
-it reports zero's for the values of th temperature and pressure along the
-imulation.
+it reports zero's for the values of the temperature and pressure along the
+simulation.
 
 Your task will be to:
 
@@ -59,7 +59,7 @@ TASK 1: Read and understand the program
 
 Just go through the program step by step, and try to figure out how it works.
 To help you in this task, refer to the lecture slides of Prof Hunenberger and
-the comments ithin the program source file.
+the comments within the program source file.
 
 TASK 3: Implement the functions "calculate_temperature" and "calculate_pressure"
 ================================================================================

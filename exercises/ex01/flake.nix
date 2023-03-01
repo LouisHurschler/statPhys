@@ -14,7 +14,10 @@
       formatter.${system} = pkgs.nixpkgs-fmt;
 
       devShell.${system} = pkgs.mkShell rec {
-        nativeBuildInputs = with pkgs; [         ];
+        nativeBuildInputs = with pkgs; [
+        clang-tools
+        tcsh
+        ];
         buildInputs = with pkgs; [ 
         SDL2
         SDL2_image
